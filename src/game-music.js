@@ -7,12 +7,21 @@
         });
     }
 
+    function startInWeChat() {
+        startMusic();
+        if (window.WeixinJSBridge && typeof window.WeixinJSBridge.invoke === 'function') {
+            window.WeixinJSBridge.invoke('getNetworkType', {}, startMusic);
+        }
+    }
+
+    document.addEventListener('touchstart', startMusic, true);
+    document.addEventListener('pointerdown', startMusic, true);
     document.addEventListener('pointerup', startMusic, true);
     document.addEventListener('keydown', startMusic, true);
-    document.addEventListener('WeixinJSBridgeReady', startMusic, { once: true });
-    audio.addEventListener('playing', () => {
-        document.removeEventListener('pointerup', startMusic, true);
-        document.removeEventListener('keydown', startMusic, true);
-    }, { once: true });
-    startMusic();
+    document.addEventListener('WeixinJSBridgeReady', startInWeChat);
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) startMusic();
+    });
+    window.addEventListener('pageshow', startMusic);
+    startInWeChat();
 })();
