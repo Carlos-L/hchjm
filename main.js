@@ -126,6 +126,43 @@ window.boot = function() {
         cc.view.enableRetina(true);
         cc.view.resizeWithBrowserSize(true);
 
+        cc.director.on(cc.Director.EVENT_AFTER_SCENE_LAUNCH, function () {
+            var background = cc.find('Canvas/bgLayer');
+            if (!background || background.getChildByName('responsiveBackground')) return;
+
+            var originalSprite = background.getComponent(cc.Sprite);
+            if (!originalSprite || !originalSprite.spriteFrame) return;
+            var image = new cc.Node('responsiveBackground');
+            var sprite = image.addComponent(cc.Sprite);
+            sprite.spriteFrame = originalSprite.spriteFrame;
+            sprite.sizeMode = cc.Sprite.SizeMode.CUSTOM;
+            image.setContentSize(720, 1600);
+            image.zIndex = -1000;
+            background.addChild(image);
+            originalSprite.enabled = false;
+
+            var fill = new cc.Node('backgroundFill');
+            var graphics = fill.addComponent(cc.Graphics);
+            fill.zIndex = -1001;
+            background.addChild(fill);
+
+            function fitBackground() {
+                var width = cc.winSize.width;
+                var height = cc.winSize.height;
+                var scale = Math.min(width / 720, height / 1600);
+                image.setScale(scale);
+                graphics.clear();
+                graphics.fillColor = cc.color(247, 211, 177);
+                graphics.rect(-width / 2, -height / 2, width, height);
+                graphics.fill();
+            }
+
+            fitBackground();
+            window.addEventListener('resize', function () {
+                requestAnimationFrame(fitBackground);
+            });
+        });
+
         if (!false && !false) {
 
             if (cc.sys.isBrowser) {
