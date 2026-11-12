@@ -2982,14 +2982,14 @@
           "_spriteFrame": {
             "__uuid__": "ael56Iw8NBcYnb/PbiUUPe"
           },
-          "_type": 1,
+          "_type": 0,
           "_sizeMode": 0
         }
       ],
       "_contentSize": {
         "__type__": "cc.Size",
         "width": 720,
-        "height": 1280
+        "height": 1600
       },
       "_trs": {
         "__type__": "TypedArray",
