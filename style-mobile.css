@@ -123,12 +123,6 @@ canvas {
     font-size: 13px;
 }
 
-#round-summary .summary-note {
-    margin: 8px 0 0;
-    color: #735549;
-    font-size: 12px;
-}
-
 #round-summary .summary-score {
     margin: 15px 0;
     font-size: 14px;
@@ -155,13 +149,6 @@ canvas {
 #round-summary button:focus-visible {
     outline: 3px solid #4b2c24;
     outline-offset: 3px;
-}
-
-#round-summary .summary-music-credit {
-    margin: 10px 0 0;
-    color: #735549;
-    font-size: 11px;
-    line-height: 1.45;
 }
 
 a:link,
