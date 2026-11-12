@@ -274,7 +274,7 @@ window.__require = function e(t, n, o) {
           var clips = this.mergeClips;
           if (clips.length === 0) return;
           var clip = clips[Math.floor(Math.random() * clips.length)];
-          cc.audioEngine.play(clip, false, 0.6);
+          cc.audioEngine.play(clip, false, 0.25);
         }, t.prototype.StopAll = function () {
           cc.audioEngine.stopAllEffects()
         }, t.Instance = null, c([r({
