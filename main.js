@@ -141,20 +141,9 @@ window.boot = function() {
             background.addChild(image);
             originalSprite.enabled = false;
 
-            var fill = new cc.Node('backgroundFill');
-            var graphics = fill.addComponent(cc.Graphics);
-            fill.zIndex = -1001;
-            background.addChild(fill);
-
             function fitBackground() {
                 var width = cc.winSize.width;
-                var height = cc.winSize.height;
-                var scale = Math.min(width / 720, height / 1600);
-                image.setScale(scale);
-                graphics.clear();
-                graphics.fillColor = cc.color(247, 211, 177);
-                graphics.rect(-width / 2, -height / 2, width, height);
-                graphics.fill();
+                image.setScale(width / 720);
             }
 
             fitBackground();
