@@ -596,14 +596,14 @@
       "name": "fuli2",
       "texture": "8cUqhRmWlHApmXCiyp9Ddz",
       "rect": [
-        39,
-        38,
-        139,
-        137
+        0,
+        0,
+        216,
+        216
       ],
       "offset": [
-        0.5,
-        1.5
+        0,
+        0
       ],
       "originalSize": [
         216,
@@ -1454,14 +1454,14 @@
       "name": "fuli1",
       "texture": "47VjEbQ2RBYLx+KZh29Jdw",
       "rect": [
-        39,
-        42,
-        139,
-        133
+        0,
+        0,
+        216,
+        216
       ],
       "offset": [
-        0.5,
-        -0.5
+        0,
+        0
       ],
       "originalSize": [
         216,
@@ -1831,7 +1831,7 @@
         0,
         0,
         720,
-        1280
+        1600
       ],
       "offset": [
         0,
@@ -1839,7 +1839,7 @@
       ],
       "originalSize": [
         720,
-        1280
+        1600
       ],
       "capInsets": [
         0,
@@ -3510,6 +3510,17 @@
             {
               "__uuid__": "bbVMxP2gVDD74JoNq2RzVi"
             }
+          ],
+          "mergeClips": [
+            {
+              "__uuid__": "c9KydTHStKvrePsdrFib32"
+            },
+            {
+              "__uuid__": "c9KydTHStKvrePsdrFib33"
+            },
+            {
+              "__uuid__": "c9KydTHStKvrePsdrFib34"
+            }
           ]
         }
       ],
@@ -3955,8 +3966,8 @@
       ],
       "_contentSize": {
         "__type__": "cc.Size",
-        "width": 200,
-        "height": 200
+        "width": 148,
+        "height": 148
       },
       "_trs": {
         "__type__": "TypedArray",
@@ -3994,13 +4005,14 @@
           ],
           "_spriteFrame": {
             "__uuid__": "95mhffC/VHl6BpDIlOMmEF"
-          }
+          },
+          "_sizeMode": 0
         }
       ],
       "_contentSize": {
         "__type__": "cc.Size",
-        "width": 139,
-        "height": 133
+        "width": 128,
+        "height": 128
       },
       "_trs": {
         "__type__": "TypedArray",
@@ -7848,7 +7860,7 @@
       ],
       "capInsets": [
         0,
-        22,
+        100,
         0,
         0
       ]
@@ -8633,5 +8645,20 @@
         0
       ]
     }
+  },
+  {
+    "__type__": "cc.AudioClip",
+    "_name": "cat-merge-1",
+    "_native": ".mp3"
+  },
+  {
+    "__type__": "cc.AudioClip",
+    "_name": "cat-merge-2",
+    "_native": ".mp3"
+  },
+  {
+    "__type__": "cc.AudioClip",
+    "_name": "cat-merge-3",
+    "_native": ".mp3"
   }
 ]

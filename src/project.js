@@ -262,7 +262,7 @@ window.__require = function e(t, n, o) {
       s = function (e) {
         function t() {
           var t = null !== e && e.apply(this, arguments) || this;
-          return t.audioClip = [], t
+          return t.audioClip = [], t.mergeClips = [], t
         }
 
         var n;
@@ -270,11 +270,16 @@ window.__require = function e(t, n, o) {
           null != n.Instance && n.Instance.destroy(), n.Instance = this
         }, t.prototype.Play = function (e, t, n) {
           cc.audioEngine.play(this.audioClip[e], t, n)
+        }, t.prototype.PlayMerge = function () {
+          var clips = this.mergeClips;
+          if (clips.length === 0) return;
+          var clip = clips[Math.floor(Math.random() * clips.length)];
+          cc.audioEngine.play(clip, false, 1);
         }, t.prototype.StopAll = function () {
           cc.audioEngine.stopAllEffects()
         }, t.Instance = null, c([r({
           type: cc.AudioClip
-        })], t.prototype, "audioClip", void 0), t = n = c([i], t)
+        })], t.prototype, "audioClip", void 0), c([r({ type: cc.AudioClip })], t.prototype, "mergeClips", void 0), t = n = c([i], t)
       }(cc.Component);
     n.default = s, cc._RF.pop()
   }, {}],
@@ -1148,7 +1153,9 @@ window.__require = function e(t, n, o) {
 
         var n;
         return o(t, e), n = t, t.prototype.onLoad = function () {
-          null != n.Instance && n.Instance.destroy(), n.Instance = this, a.default.playerTouch = !0, a.default.score = 0, a.default.knifeStatic = "Idle", a.default.knifeLR = 1, a.default.GameUpdateCtrl = !0
+          null != n.Instance && n.Instance.destroy(), n.Instance = this, a.default.playerTouch = !0, a.default.score = 0, a.default.knifeStatic = "Idle", a.default.knifeLR = 1, a.default.GameUpdateCtrl = !0;
+          a.default.mergedCatCount = 0;
+          a.default.mergedCatWeight = 0;
         }, t.prototype.start = function () {
           a.default.playNum, a.default.bgNumber >= 3 && (a.default.bgNumber = 0), a.default.bgNumber++, a.default.playNum++, cc.tween(this.lineNode.children[0]).to(.3, {
             opacity: 255
@@ -1172,7 +1179,7 @@ window.__require = function e(t, n, o) {
             for (var c = 1; c < this.lineNode.children.length; c++) this.lineNode.children[c].active = !1;
             a.default.GameUpdateCtrl = !1, this.scheduleOnce(function () {
               l.default.Instance.ToEnd()
-            }, 4), this.endOne++
+            }, Math.max(4, (t + 1) * .1)), this.endOne++
           }
         }, t.prototype.testEnd = function () {
           var e = this;
@@ -1187,7 +1194,7 @@ window.__require = function e(t, n, o) {
             for (t = 1; t < this.lineNode.children.length; t++) this.lineNode.children[t].active = !1;
             a.default.GameUpdateCtrl = !1, this.scheduleOnce(function () {
               l.default.Instance.ToEnd()
-            }, 4), this.endOne++
+            }, Math.max(4, c * .1)), this.endOne++
           }
         }, t.prototype.findHighestFruit = function () {
           for (var e = this.fruitNode.children[0].y, t = 1; t < this.fruitNode.children.length; t++) {
@@ -1230,10 +1237,17 @@ window.__require = function e(t, n, o) {
             easing: "backOut"
           }).call(function () {
             null != o.getComponent(cc.PhysicsCircleCollider) && (o.getComponent(cc.PhysicsCircleCollider).radius = o.height / 2, o.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic, o.getComponent(cc.PhysicsCircleCollider).apply())
-          }).start(), n.Instance.fruitHeigth = n.Instance.findHighestFruit()
+          }).start(), n.Instance.fruitHeigth = n.Instance.findHighestFruit();
+          a.default.mergedCatCount++;
+          // In-game weight is 2 jin per level, starting at level one.
+          a.default.mergedCatWeight += 2 * (e + 1);
+          u.default.Instance.PlayMerge();
         }, t.prototype.createFruitSui = function (e, t) {
-        }, t.prototype.createFruitL = function (e, t, n) {
-          u.default.Instance.Play(3, !1, .5), u.default.Instance.Play(6, !1, .3);
+        }, t.prototype.createFruitL = function (e, t, n, playBurstSound = true) {
+          if (playBurstSound) {
+            u.default.Instance.Play(3, false, .5);
+            u.default.Instance.Play(6, false, .3);
+          }
           for (var o = 0; o < 10; o++) {
             var c = r.default.Spawn("juicePre", this.downEffect);
             c.getComponent(cc.Sprite).spriteFrame = d.default.Instance.fruitL[e];
@@ -1286,8 +1300,8 @@ window.__require = function e(t, n, o) {
         }, t.prototype.getScore = function (e, t, n, o) {
           var c = r.default.Spawn("score", this.bazieffect);
           c.position = t, c.scale = .2, c.children[1].getComponent(cc.Label).string = e, c.runAction(cc.sequence(cc.spawn(cc.scaleTo(.3, n), cc.moveBy(.3, 0, 150), cc.rotateBy(.3, 720)), cc.fadeOut(o)))
-        }, t.prototype.ribbonEffect = function (e) {
-          u.default.Instance.Play(3, !1, 1);
+        }, t.prototype.ribbonEffect = function (e, playBurstSound = true) {
+          if (playBurstSound) u.default.Instance.Play(3, false, 1);
           for (var t = s.default.getRandomNum(80, 100), n = 0; n < t; n++) {
             var o = r.default.Spawn("star", this.bazieffect);
             o.getComponent(cc.Sprite).spriteFrame = d.default.Instance.fllows[s.default.getRandomNum(0, 5, !0)], o.position = e;
@@ -1361,8 +1375,7 @@ window.__require = function e(t, n, o) {
     Object.defineProperty(n, "__esModule", {
       value: !0
     });
-    var a = e("./FailedUi"),
-      i = e("./MainGameUi"),
+    var i = e("./MainGameUi"),
       r = e("./DataManager"),
       s = e("../common/PlayerInfo"),
       l = cc._decorator,
@@ -1375,7 +1388,15 @@ window.__require = function e(t, n, o) {
 
         var n;
         return o(t, e), n = t, t.prototype.onLoad = function () {
-          null != n.Instance && n.Instance.destroy(), n.Instance = this, cc.find("Canvas/bgLayer").setContentSize(cc.winSize.width, cc.winSize.height)
+          null != n.Instance && n.Instance.destroy(), n.Instance = this;
+          var background = cc.find("Canvas/bgLayer");
+          background.setContentSize(cc.winSize.width, cc.winSize.height);
+
+          var floor = background.getChildByName("down");
+          var sideWall = background.getChildByName("left");
+          var wallBottom = sideWall.y - sideWall.height / 2;
+          var floorTop = Math.max(wallBottom, 176 - cc.winSize.height / 2);
+          floor.y = Math.min(floor.y, floorTop - floor.height / 2);
         }, t.prototype.start = function () {
           this.PhysicsSystemCtrl(!0, !1)
         }, t.prototype.update = function (e) {
@@ -1384,15 +1405,22 @@ window.__require = function e(t, n, o) {
         }, t.prototype.SetScore = function (e) {
           this.score = e, i.default.Instance.SetScoreTween(this.score)
         }, t.prototype.GameOver = function () {
-          var e = cc.find("Canvas").getComponent("MainGameJS"),
-            t = r.default.Instance.GetPlayerHighScore();
-          this.score > t && (t = this.score, r.default.Instance.SetPlayerHighScore(t)), e.SetScore(this.score), e.SetGameEndScore(), a.default.Instance.ShowFailedUi(s.default.score, t)
+          var score = s.default.score;
+          var previousBest = Number(r.default.Instance.GetPlayerHighScore()) || 0;
+          var best = Math.max(score, previousBest);
+          if (best > previousBest) r.default.Instance.SetPlayerHighScore(best);
+          window.showRoundSummary({
+            count: s.default.mergedCatCount,
+            weight: s.default.mergedCatWeight,
+            score: score,
+            best: best
+          }, this.RestartGame.bind(this));
         }, t.prototype.RestartGame = function () {
           cc.find("Canvas").getComponent("MainGameJS").RestartGame()
         }, t.prototype.GetGameEndShowInfo = function () {
           return cc.find("Canvas").getComponent("MainGameJS").GetGameEndInfo()
         }, t.prototype.ToEnd = function () {
-          cc.find("Canvas").getComponent("MainGameJS").gameEnd1()
+          this.GameOver()
         }, t.prototype.PhysicsSystemCtrl = function (e, t) {
           cc.director.getPhysicsManager().enabled = e, cc.director.getPhysicsManager().gravity = cc.v2(0, -300), t && (cc.director.getPhysicsManager().debugDrawFlags = cc.PhysicsManager.DrawBits.e_shapeBit), cc.director.getCollisionManager().enabled = e, cc.director.getCollisionManager().enabledDebugDraw = t
         }, t.Instance = null, t.isShowAd = !1, t = n = c([u], t)
@@ -1401,7 +1429,6 @@ window.__require = function e(t, n, o) {
   }, {
     "../common/PlayerInfo": "PlayerInfo",
     "./DataManager": "DataManager",
-    "./FailedUi": "FailedUi",
     "./MainGameUi": "MainGameUi"
   }],
   GameUiTools: [function (e, t, n) {
@@ -1989,7 +2016,15 @@ window.__require = function e(t, n, o) {
 
         var n;
         return o(t, e), n = t, t.prototype.onLoad = function () {
-          null != n.Instance && n.Instance.destroy(), n.Instance = this
+          null != n.Instance && n.Instance.destroy(), n.Instance = this;
+          // Anchor the icon to the viewport independently of the animated score panel.
+          var corner = this.adsButton.addComponent(cc.Widget);
+          corner.target = this.scorePanel.parent;
+          corner.alignMode = cc.Widget.AlignMode.ALWAYS;
+          corner.isAlignTop = true;
+          corner.isAlignRight = true;
+          corner.top = 28;
+          corner.right = 28;
         }, t.prototype.start = function () {
           var e = this;
           this.ShowScorePanel(), s.default.Instance.GetLevel() % 5 == 1 ? (this.passlevelYQ = .12, this.lerpCtrl = !0) : s.default.Instance.GetLevel() % 5 == 2 ? (this.passlevelYQ = .31, this.lerpCtrl = !0) : s.default.Instance.GetLevel() % 5 == 3 ? (this.passlevelYQ = .51, this.lerpCtrl = !0) : s.default.Instance.GetLevel() % 5 == 4 ? (this.passlevelYQ = .71, this.lerpCtrl = !0) : s.default.Instance.GetLevel() % 5 == 0 && (this.passlevelYQ = 1, this.lerpCtrl = !0), cc.tween(this.adsButton).call(function () {
@@ -3513,7 +3548,7 @@ window.__require = function e(t, n, o) {
                 cc.tween(t.node).to(.1, {
                   position: n.node.position
                 }).call(function () {
-                  i.default.Instance.createFruitSui(o.fruitNumber, n.node.position), i.default.Instance.createFruitL(o.fruitNumber, n.node.position, n.node.width),
+                  i.default.Instance.createFruitSui(o.fruitNumber, n.node.position), i.default.Instance.createFruitL(o.fruitNumber, n.node.position, n.node.width, false),
                     i.default.Instance.createLevelUpFruit(o.fruitNumber + fruitVolume, n.node.position),
                     n.node.active = !1, t.node.active = !1, n.node.destroy(), t.node.destroy()
                 }).start())) :
@@ -3529,7 +3564,7 @@ window.__require = function e(t, n, o) {
                 position: n.node.position
               }).call(function () {
                 i.default.Instance.createFruitSui(o.fruitNumber, n.node.position),
-                  i.default.Instance.createFruitL(o.fruitNumber, n.node.position, n.node.width),
+                  i.default.Instance.createFruitL(o.fruitNumber, n.node.position, n.node.width, false),
                   // +1 变 -1
                   i.default.Instance.createLevelUpFruit(o.fruitNumber + fruitVolume, n.node.position);
                 var e = cc.find("Canvas/upEffectParent").getChildByName("daxigua");
@@ -3543,7 +3578,7 @@ window.__require = function e(t, n, o) {
                   angle: 360
                 }).repeatForever().start();
                 var s = new cc.Node;
-                s.addComponent(cc.Sprite).spriteFrame = l.default.Instance.fruit[reverseLevelUp ? 0 : 10], s.parent = c, s.position = cc.v2(0), d.default.Instance.Play(4, !1, 1), i.default.Instance.ribbonEffect(cc.v2(0, 0)), c.runAction(cc.sequence(cc.spawn(cc.jumpBy(1, 0, 0, 300, 1), cc.scaleTo(1, 1)), cc.delayTime(1), cc.spawn(cc.moveTo(1, cc.v2(0, 500)), cc.scaleTo(1, 0)), cc.callFunc(function () {
+                s.addComponent(cc.Sprite).spriteFrame = l.default.Instance.fruit[reverseLevelUp ? 0 : 10], s.parent = c, s.position = cc.v2(0), i.default.Instance.ribbonEffect(cc.v2(0, 0), false), c.runAction(cc.sequence(cc.spawn(cc.jumpBy(1, 0, 0, 300, 1), cc.scaleTo(1, 1)), cc.delayTime(1), cc.spawn(cc.moveTo(1, cc.v2(0, 500)), cc.scaleTo(1, 0)), cc.callFunc(function () {
                   a.default.score += 100, u.default.Instance.SetScoreTween(a.default.score), e.active = !1, a.default.playerTouch = !0, c.destroy()
                 }))), n.node.active = !1, t.node.active = !1, n.node.destroy(), t.node.destroy()
               }).start()))
@@ -3635,7 +3670,7 @@ window.__require = function e(t, n, o) {
         var e = null;
         e = 1 == a.langugeType ? this.getContentByScore(c.gameScore, a.gameNameText) : this.getContentByScore2(c.gameScore, a.gameNameText), console.log("nihao", a.endHttpShowInfo), null != a.endHttpShowInfo && "" != a.endHttpShowInfo && (cc.log("gototo"), e = a.endHttpShowInfo), this.overInfoT.string = e;
         var t = this.overInfoT.node.height;
-        if (this.overInfoT.node.height = Math.ceil(e.length * this.overInfoT.fontSize / this.overInfoT.node.width) * t, document.title = e, console.log("gameOver txtMoreText", a.txtMoreText), this.midGameText.string = a.txtMoreText, this.leftBtnText.string = a.txtAgainText, this.tempArr = this.gameFocus(), null != a.ranLinkUrl()) {
+        if (this.overInfoT.node.height = Math.ceil(e.length * this.overInfoT.fontSize / this.overInfoT.node.width) * t, console.log("gameOver txtMoreText", a.txtMoreText), this.midGameText.string = a.txtMoreText, this.leftBtnText.string = a.txtAgainText, this.tempArr = this.gameFocus(), null != a.ranLinkUrl()) {
           var n = a.ranLinkUrl(),
             o = a.ranLinkData.gameList[n].gameName;
           this.rigthBtnGameName = o, this.rightBtnGameUrl = a.ranLinkData.gameList[n].gameUrl

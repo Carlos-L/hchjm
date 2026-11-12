@@ -5,7 +5,7 @@
     <meta charset="utf-8">
 
     <!-- 微信搜索公众号『 程序员鱼皮 』，学习编程技术，发现更多好玩的项目！ -->
-    <title>合成大西瓜</title>
+    <title>合成哈基米</title>
 
     <!--http://www.html5rocks.com/en/mobile/mobifying/-->
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1" />
@@ -79,6 +79,29 @@
         <div id="block-Box" style="display:block;width:100%;height:100%;"></div>
     </div>
 
+    <audio id="game-music" src="res/autumn-sunshine.mp3" autoplay loop></audio>
+
+    <dialog id="round-summary" aria-labelledby="round-summary-title">
+        <img class="summary-portrait" src="res/summary-cat.png" alt="" width="76" height="76" />
+        <h1 id="round-summary-title">哈基米收工啦！</h1>
+        <dl class="summary-stats">
+            <div>
+                <dt>本局合成</dt>
+                <dd><span id="summary-count"></span> <small>只</small></dd>
+            </div>
+            <div>
+                <dt>合成总重量</dt>
+                <dd><span id="summary-weight"></span> <small>斤</small></dd>
+            </div>
+        </dl>
+        <p class="summary-note">重量按游戏内的猫咪等级计算</p>
+        <p class="summary-score">本局 <strong id="summary-score"></strong> 分 <span aria-hidden="true">·</span> 最高 <strong id="summary-best"></strong> 分</p>
+        <form method="dialog">
+            <button type="submit">再合一局</button>
+        </form>
+        <p class="summary-music-credit">配乐《秋天里的温暖画面1》 · 爱给网</p>
+    </dialog>
+
 
 
     <div id="adContainer" style="display:none;position: absolute;top:0px;left: 0px;width:100%;height:100%;z-index:999;"></div>
@@ -110,31 +133,6 @@
         var adEndComplete = false;
         var resEndComplete = false;
 
-        judgeLanTitle();
-
-        function judgeLanTitle() {
-
-            //        console.log("window.navigator.language",window.navigator.language);
-
-            if (window.navigator.language == "zh-CN" || window.navigator.language == "zh-cn") {
-                document.title = "小游戏：合成大西瓜";
-            } else if (window.navigator.language == "zh-TW") {
-                document.title = "小遊戲：合成大西瓜";
-            } else if (window.navigator.language == "zh-HK") {
-                document.title = "小遊戲：合成大西瓜";
-            } else if (window.navigator.language == "ko-KR") {
-                document.title = "작은 놀이：큰 수박 을 합성 하 다";
-            } else if (window.navigator.language == "ja-JP") {
-                document.title = "ミニゲーム：合成スイカ";
-            } else if (window.navigator.language == "th-TH") {
-                document.title = "เกมเล็กๆ：แตงโมสังเคราะห์";
-            } else {
-                document.title = "Little game：Synthetic watermelon";
-            }
-
-
-        }
-
         var loadintT = document.getElementById("loadingText");
         var loadintGif = document.getElementById("loadingImg")
         setTimeout(function() {
@@ -149,12 +147,6 @@
         loadData.completedCount = 0;
         loadData.totalCount = 0;
 
-        onload();
-
-        function onload() {
-            var winHeight = document.documentElement.clientHeight;
-            document.getElementById("canvasDiv").style.height = winHeight + "px";
-        };
         window.onload = function() {
             document.getElementById("block-Box").style.display = "none";
         }
@@ -225,6 +217,8 @@
 
     <script src="src/settings.js" charset="utf-8"></script>
     <script src="src/extraSettings.js" charset="utf-8"></script>
+    <script src="src/round-summary.js" charset="utf-8"></script>
+    <script src="src/game-music.js" charset="utf-8"></script>
 
     <script src="main.js" charset="utf-8"></script>
 
