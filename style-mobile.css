@@ -63,6 +63,36 @@ canvas {
     background-color: rgba(0, 0, 0, 0);
 }
 
+.cat-banter {
+    position: fixed;
+    z-index: 30;
+    top: clamp(90px, 19vh, 170px);
+    left: 50%;
+    box-sizing: border-box;
+    max-width: min(85vw, 360px);
+    padding: 10px 16px;
+    border: 1px solid #d69e7d;
+    border-radius: 18px;
+    background: #fff8eede;
+    color: #653b30;
+    box-shadow: 0 7px 24px #673f2530;
+    font: 700 clamp(13px, 3.8vw, 17px)/1.4 "Noto Sans SC", "PingFang SC", system-ui, sans-serif;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -8px);
+    transition: opacity .2s ease, transform .2s ease;
+}
+
+.cat-banter[data-kind="easter-egg"] {
+    background: #fff2dce8;
+    border-color: #d4a869;
+}
+
+.cat-banter.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
 #round-summary {
     box-sizing: border-box;
     width: min(360px, calc(100% - 32px));

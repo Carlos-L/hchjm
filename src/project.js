@@ -1156,6 +1156,7 @@ window.__require = function e(t, n, o) {
           null != n.Instance && n.Instance.destroy(), n.Instance = this, a.default.playerTouch = !0, a.default.score = 0, a.default.knifeStatic = "Idle", a.default.knifeLR = 1, a.default.GameUpdateCtrl = !0;
           a.default.mergedCatCount = 0;
           a.default.mergedCatWeight = 0;
+          window.catBanter && window.catBanter.reset();
         }, t.prototype.start = function () {
           a.default.playNum, a.default.bgNumber >= 3 && (a.default.bgNumber = 0), a.default.bgNumber++, a.default.playNum++, cc.tween(this.lineNode.children[0]).to(.3, {
             opacity: 255
@@ -1242,6 +1243,7 @@ window.__require = function e(t, n, o) {
           // In-game weight is 2 jin per level, starting at level one.
           a.default.mergedCatWeight += 2 * (e + 1);
           u.default.Instance.PlayMerge();
+          window.catBanter && window.catBanter.onMerge(e);
         }, t.prototype.createFruitSui = function (e, t) {
         }, t.prototype.createFruitL = function (e, t, n, playBurstSound = true) {
           if (playBurstSound) {
